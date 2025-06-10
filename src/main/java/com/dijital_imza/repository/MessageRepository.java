@@ -1,6 +1,6 @@
 package com.dijital_imza.repository;
 
-import com.dijital_imza.entity.Message;
+import com.dijital_imza.Entity.Message;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

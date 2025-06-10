@@ -3,6 +3,7 @@ package com.dijital_imza.config;
 import com.dijital_imza.Security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,16 +26,18 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Auth işlemleri açık
+                        // Auth işlemleri herkese açık
                         .requestMatchers("/api/auth/login", "/api/auth/signup").permitAll()
-                        // Statik dosyalar açık
+                        // Tüm kullanıcıları listeleyen GET endpoint’i herkese açık
+                        .requestMatchers(HttpMethod.GET, "/api/auth/list").permitAll()
+                        // Statik dosyalar herkese açık
                         .requestMatchers("/uploads/**").permitAll()
-                        // WebSocket handshake ve SockJS uç noktaları (tek bir pattern ile)
+                        // WebSocket handshake ve SockJS uç noktaları authenticated
                         .requestMatchers("/ws/**").authenticated()
                         // Geriye kalan tüm uç noktalar JWT ile korunacak
                         .anyRequest().authenticated()
                 )
-                // JWT filtresini ekle
+                // JWT filtresini UsernamePasswordAuthenticationFilter’dan önce ekle
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

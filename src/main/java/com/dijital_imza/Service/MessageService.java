@@ -2,7 +2,7 @@ package com.dijital_imza.Service;
 
 import com.dijital_imza.DTO.MessageDTO;
 import com.dijital_imza.Entity.Kullanici;
-import com.dijital_imza.entity.Message;
+import com.dijital_imza.Entity.Message;
 import com.dijital_imza.repository.KullaniciRepository;
 import com.dijital_imza.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
