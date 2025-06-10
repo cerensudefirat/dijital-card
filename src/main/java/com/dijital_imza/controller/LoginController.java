@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/auth")
 public class LoginController {
@@ -67,6 +69,12 @@ public class LoginController {
 
         SigninResponseDto response = loginService.uploadProfilePhoto(file, request);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<Kullanici>> getAllUsers() {
+        List<Kullanici> users = loginService.getAllUsers();
+        return ResponseEntity.ok(users);
     }
 
 }

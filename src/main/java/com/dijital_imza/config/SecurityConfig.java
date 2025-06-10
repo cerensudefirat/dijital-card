@@ -23,18 +23,18 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // CSRF korumasını kapat
                 .csrf(csrf -> csrf.disable())
-                // İstek izinleri
                 .authorizeHttpRequests(auth -> auth
-                        // Auth işlemleri için açık bırak
+                        // Auth işlemleri açık
                         .requestMatchers("/api/auth/login", "/api/auth/signup").permitAll()
-                        // Static dosyalar ve WebSocket handshake izinli
-                        .requestMatchers("/uploads/**", "/ws/**").permitAll()
-                        // Diğer tüm isteklerde JWT filtresi
+                        // Statik dosyalar açık
+                        .requestMatchers("/uploads/**").permitAll()
+                        // WebSocket handshake ve SockJS uç noktaları (tek bir pattern ile)
+                        .requestMatchers("/ws/**").authenticated()
+                        // Geriye kalan tüm uç noktalar JWT ile korunacak
                         .anyRequest().authenticated()
                 )
-                // JWT filtresini güvenlik zincirine ekle
+                // JWT filtresini ekle
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
