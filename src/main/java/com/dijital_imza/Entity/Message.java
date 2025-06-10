@@ -1,4 +1,4 @@
-package com.dijital_imza.entity;
+package com.dijital_imza.Entity;
 
 import com.dijital_imza.Entity.Kullanici;
 import jakarta.persistence.*;
