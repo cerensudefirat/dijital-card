@@ -1,24 +1,44 @@
 package com.dijital_imza.Service;
 
-import com.dijital_imza.DTO.DtoYetenek;
 import com.dijital_imza.DTO.MessageDTO;
+import com.dijital_imza.Entity.Kullanici;
 import com.dijital_imza.Entity.Message;
-import com.dijital_imza.Entity.Yetenek;
+import com.dijital_imza.repository.KullaniciRepository;
+import com.dijital_imza.repository.MessageRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface MessageService {
+@Service
+@RequiredArgsConstructor
+public class MessageService {
 
-    Message saveMessage(MessageDTO dto);
+    private final MessageRepository messageRepository;
+    private final KullaniciRepository kullaniciRepository;
 
-    List<Message> getConversation(Long userId, Long otherUserId);
+    @Transactional
+    public Message saveMessage(MessageDTO dto) {
+        Kullanici sender = kullaniciRepository.findById(dto.getSenderId())
+                .orElseThrow(() -> new IllegalArgumentException("Gönderen bulunamadı"));
+        Kullanici recipient = kullaniciRepository.findById(dto.getRecipientId())
+                .orElseThrow(() -> new IllegalArgumentException("Alıcı bulunamadı"));
 
-    interface YetenekService {
-
-        List<Yetenek> getYetenekList(Long kullaniciId);
-
-        String addYetenek(Long kullaniciId, DtoYetenek dtoYetenek);
-
-        String removeYetenek(Long kullaniciId, Long yetenekId);
+        Message m = new Message();
+        m.setSender(sender);
+        m.setRecipient(recipient);
+        m.setContent(dto.getText());
+        return messageRepository.save(m);
     }
+
+    @Transactional(readOnly = true)
+    public List<Message> getConversation(Long userId, Long otherUserId) {
+        List<Message> sent = messageRepository.findBySenderIdAndRecipientId(userId, otherUserId);
+        List<Message> received = messageRepository.findBySenderIdAndRecipientId(otherUserId, userId);
+        sent.addAll(received);
+        // isteğe bağlı: timestamp’a göre sırala
+        sent.sort((a, b) -> a.getTimestamp().compareTo(b.getTimestamp()));
+        return sent;
+        }
 }

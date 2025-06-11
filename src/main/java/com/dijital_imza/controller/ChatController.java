@@ -1,8 +1,8 @@
 package com.dijital_imza.controller;
 
 import com.dijital_imza.DTO.MessageDTO;
-import com.dijital_imza.Service.MessageService;
 import com.dijital_imza.Entity.Message;
+import com.dijital_imza.Service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
