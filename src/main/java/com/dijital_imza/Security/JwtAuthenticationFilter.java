@@ -27,6 +27,11 @@ public class JwtAuthenticationFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
         String uri = request.getRequestURI();
 
+        if (uri.startsWith("/uploads/")) {
+            chain.doFilter(req, res);
+            return;
+        }
+
         if (uri.startsWith("/ws")) {
             chain.doFilter(req, res);
             return;
@@ -61,6 +66,6 @@ public class JwtAuthenticationFilter implements Filter {
 
         request.setAttribute("userId", userId);
 
-        chain.doFilter(req, res);
+        chain.doFilter(req,res);
     }
 }
