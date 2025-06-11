@@ -10,24 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Data @NoArgsConstructor @AllArgsConstructor
 @Table(name = "yetenek")
 public class Yetenek {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long yetenek_id;
-    @Column
-    private String aciklama;
 
-    @ManyToMany
-    @JoinTable(
-            name = "kullanici_yetenek",
-            joinColumns =@JoinColumn(name = "yetenek_id"),
-            inverseJoinColumns = @JoinColumn(name = "kullanici_id")
-    )
+    @Column private String aciklama;
+
+    @ManyToMany(mappedBy = "yetenek")   // <-- sadece mappedBy
     @JsonBackReference
-    private List<Kullanici> kullanici=new ArrayList<>();
+    private List<Kullanici> kullanici = new ArrayList<>();
 }

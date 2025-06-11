@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,14 +27,14 @@ public class Kullanici {
     @Column private String job;
     @Column private String profilFoto;
 
-    @ManyToMany
+    @ManyToMany                         // owning side
     @JoinTable(
             name               = "kullanici_yetenek",
             joinColumns        = @JoinColumn(name = "kullanici_id"),
             inverseJoinColumns = @JoinColumn(name = "yetenek_id")
     )
-    @JsonManagedReference
-    private List<Yetenek> yetenek;
+    @JsonManagedReference              // JSON’a bu taraf girer
+    private List<Yetenek> yetenek = new ArrayList<>();
 
     @OneToMany(mappedBy = "kullanici",
             cascade  = CascadeType.ALL,
