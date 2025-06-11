@@ -4,6 +4,7 @@ import com.dijital_imza.DTO.MessageDTO;
 import com.dijital_imza.Service.MessageService;
 import com.dijital_imza.Entity.Message;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -19,8 +20,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ChatController {
 
-    private final MessageService messageService;
-    private final SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    private MessageService messageService;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     @MessageMapping("/chat")
     public void processMessage(

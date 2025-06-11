@@ -1,3 +1,4 @@
+
 package com.dijital_imza.config;
 
 import com.dijital_imza.Security.JwtUtil;
@@ -34,8 +35,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry
                 .addEndpoint("/ws")
-                .setAllowedOrigins("http://localhost:3000") // React tarafı için
-                .withSockJS();
+                .setAllowedOrigins("http://localhost:5173").withSockJS(); // React tarafı için
+
     }
 
     @Override
@@ -58,9 +59,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     if (bearer != null && bearer.startsWith("Bearer ")) {
                         String token = bearer.substring(7);
                         if (jwtUtil.validateToken(token)) {
-                            // Token geçerliyse userId'yi al
                             Long userId = jwtUtil.extractUserId(token);
-                            // Basit bir Principal impl. ile atıyoruz
                             Principal userPrincipal = () -> String.valueOf(userId);
                             accessor.setUser(userPrincipal);
                         }

@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.Collections;
 
-
 @Component
 public class JwtAuthenticationFilter implements Filter {
 
@@ -24,16 +23,20 @@ public class JwtAuthenticationFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
 
-        HttpServletRequest request  = (HttpServletRequest) req;
+        HttpServletRequest  request  = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
+        String uri = request.getRequestURI();
 
-        String uri    = request.getRequestURI();
-        String method = request.getMethod();
+        if (uri.startsWith("/ws")) {
+            chain.doFilter(req, res);
+            return;
+        }
 
         if (uri.contains("/login") || uri.contains("/signup")) {
             chain.doFilter(req, res);
             return;
         }
+
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization header missing or invalid");
@@ -47,19 +50,17 @@ public class JwtAuthenticationFilter implements Filter {
         }
 
         Long userId = jwtUtil.extractUserId(token);
-
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
                         userId,
                         null,
                         Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
                 );
-
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         request.setAttribute("userId", userId);
 
-        chain.doFilter(req,res);
+        chain.doFilter(req, res);
     }
 }

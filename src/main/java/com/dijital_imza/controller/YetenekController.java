@@ -3,7 +3,7 @@ package com.dijital_imza.controller;
 import com.dijital_imza.DTO.DtoYetenek;
 import com.dijital_imza.Entity.Yetenek;
 import com.dijital_imza.Security.JwtUtil;
-import com.dijital_imza.Service.YetenekService;
+import com.dijital_imza.Service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +14,7 @@ import java.util.List;
 public class YetenekController {
 
     @Autowired
-    private YetenekService yetenekService;
+    private MessageService.YetenekService yetenekService;
 
     @Autowired
     private JwtUtil jwtUtil;
