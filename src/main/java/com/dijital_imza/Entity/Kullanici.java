@@ -14,8 +14,10 @@ import java.util.List;
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Table(name = "Kullanici")
 public class Kullanici {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column private String name;
     @Column private String surname;
     @Column private String email;
@@ -24,13 +26,24 @@ public class Kullanici {
     @Column private String job;
     @Column private String profilFoto;
 
-    @ManyToMany(mappedBy = "kullanici")
+    @ManyToMany
+    @JoinTable(
+            name               = "kullanici_yetenek",
+            joinColumns        = @JoinColumn(name = "kullanici_id"),
+            inverseJoinColumns = @JoinColumn(name = "yetenek_id")
+    )
     @JsonManagedReference
     private List<Yetenek> yetenek;
 
-    @OneToMany(mappedBy = "kullanici", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "kullanici",
+            cascade  = CascadeType.ALL,
+            fetch    = FetchType.LAZY)
+    @JsonManagedReference
     private List<Proje> projeler;
 
-    @OneToMany(mappedBy = "kullanici", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "kullanici",
+            cascade  = CascadeType.ALL,
+            fetch    = FetchType.LAZY)
+    @JsonManagedReference
     private List<SocialMedia> socialMedias;
 }
